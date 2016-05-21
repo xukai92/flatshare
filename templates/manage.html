@@ -6,9 +6,9 @@
     <div class="row card-panel">
       <p>
       {% if msg["member_number"] == 1%}
-        You currenty have {{ msg["member_number"] }} member, which is: 
+        You currently have {{ msg["member_number"] }} member, which is:
       {% else %}
-        You currenty have {{ msg["member_number"] }} members, which are: 
+        You currently have {{ msg["member_number"] }} members, which are:
       {% endif %}
       </p>
       <div class="col s12">
@@ -21,7 +21,7 @@
     <div class="row">
       
     <div class="col s5 card-panel">
-      <p>You can add memebers to your flat here.</p>
+      <p>You can add members to your flat here.</p>
       <div class="col s12">
         <form action="{{ url_for('manage') }}" method=post>
           <div class="row">
