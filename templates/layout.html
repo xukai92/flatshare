@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  
+  <title>FlatShare</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='materialize.min.css') }}"  media="screen,projection"/>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+  <h1><a href="/">FlatShare</a></h1>
+  <nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="/" class="brand-logo">home</a>
+      <ul class="right hide-on-med-and-down">
+        {% if not session.logged_in %}
+          <li><a href="{{ url_for('login') }}">log in</a></li>
+          <li><a href="{{ url_for('signup') }}">sign up</a></li>
+        {% else %}
+          <li><a href="{{ url_for('bills') }}">bills</a></li>
+          <li><a href="{{ url_for('analysis') }}">analysis</a></li>
+          <li><a href="{{ url_for('manage') }}">manage</a></li>
+          <li><a href="{{ url_for('logout') }}">log out</a></li>
+        {% endif %}
+      </ul>
+
+      <ul id="nav-mobile" class="side-nav">
+        {% if not session.logged_in %}
+          <li><a href="{{ url_for('login') }}">log in</a></li>
+          <li><a href="{{ url_for('signup') }}">sign up</a></li>
+        {% else %}
+          <li><a href="{{ url_for('bills') }}">bills</a></li>
+          <li><a href="{{ url_for('analysis') }}">analysis</a></li>
+          <li><a href="{{ url_for('manage') }}">manage</a></li>
+          <li><a href="{{ url_for('logout') }}">log out</a></li>
+        {% endif %}
+      </ul>
+      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+
+  <p></p>
+
+  {% for message in get_flashed_messages() %}<div class="card-panel blue message">{{ message }}</div>{% endfor %}
+  {% if msg["error"] %}<div class="card-panel red message">{{ msg["error"] }}</div>{% endif %}
+  
+  <div class="container">
+  {% block body %}{% endblock %}
+  </div>
+
+  <footer class="page-footer orange">
+    <div class="footer-copyright">
+      <div class="container to-right">
+        made by <a class="orange-text text-lighten-3" href="http://eventfulkay.com">Kai Xu</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='materialize.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='init.js') }}"></script>
+</body>
+</html>

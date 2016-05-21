@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <h3>Bills</h3>
+    {% if msg["members"] %}
+      <p>You can add a bill entry here.</p>
+      <div class="row">
+        <form class="col s12" action="{{ url_for('add_bill') }}" method=post>
+
+          <div class="row">
+            <div class="input-field col s12">
+              <input placeholder="" id="content" type="text" name=content>
+              <label for="content">Content</label>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="input-field col s6">
+              <input placeholder="" id="amount" type="text" name=amount>
+              <label for="amount">Amount ({{ session.currency }})</label>
+            </div>
+            <div class="input-field col s6">
+              <select id="member_id" name=member_id>
+                {% for entry in msg["members"] %}
+                  <option value={{ entry.member_id }}>{{ entry.member_name }}</option>
+                {% endfor %}
+              </select>
+              <label for="member_id">Member</label>
+            </div>
+          </div>
+          
+          <div class="row">
+            <input class="btn right" type=submit value=Add>
+          </div>
+
+        </form>
+      </div>
+    {% endif %}
+    
+    <p>Here is your bill history.</p>
+    <table>
+    {% for entry in msg["bills"] %}
+      <tr>
+        <td><b>{{ entry.member_name }}</b></td>
+        <td>bought</td>
+        <td><b>{{ entry.content }}</b></td>
+        <td>using</td>
+        <td><i>{{ session.currency }}{{ entry.amount }}</i></td>
+        <td>at</td>
+        <td><i>{{ entry.created_time }}</i></td>
+      </tr>
+    {% else %}
+      <em>Unbelievable.  No bill records here so far</em>
+    {% endfor %}
+    </table>
+    
+    <div class="divider"></div>
+
+    <div class="to-right section">
+      Total cost: <i>{{ session.currency }}{{ msg["total"] }}</i>
+    </div>
+  {% endif %}
+{% endblock %}

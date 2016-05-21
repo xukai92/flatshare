@@ -1,0 +1,5 @@
+body			{ width: 100%; max-width: 700px; padding: 0.8em; margin: auto; }
+
+.message		{ color: white; text-align: center; }
+
+.to-right		{ text-align: right; }

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% block body %}
+  {% if session.logged_in %}
+    <h3>Analysis</h3>
+    <p>Here is the analysis of your flat expenditure.</p>
+    <table>
+    {% for result in msg["results"] %}
+      {% if msg["results"][result] < 0 %}
+        <tr>
+          <td><b>{{ result }}</b></td>
+          <td>should</td>
+          <td><b>pay</b></td>
+          <td><i>{{ session.currency }}{{ -msg["results"][result] }}</i></td>
+        </tr> 
+      {% else %}
+        {% if msg["results"][result] == 0 %}
+          <tr>
+            <td><b>{{ result }}</b></td>
+            <td>should</td>
+            <td><b>do</b></td>
+            <td><i>nothing</i></td>
+          </tr> 
+        {% else %}
+          <tr>
+            <td><b>{{ result }}</b></td>
+            <td>should</td>
+            <td><b>collect</b></td>
+            <td><i>{{ session.currency }}{{ msg["results"][result] }}</i></td>
+          </tr>
+        {% endif %}
+      {% endif %}
+    {% else %}
+      <em>Unbelievable.  No bill records here so far</em>
+    {% endfor %}
+    </table>
+    
+    <div class="divider"></div>
+
+    <div class="to-right section">
+      Total cost: <i>{{ session.currency }}{{ msg["total"] }}</i>
+    </div>
+  {% endif %}
+{% endblock %}

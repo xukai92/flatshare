@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="card">
+    <div class="card-image waves-effect waves-block waves-light">
+      <img class="activator" src="static/flat.jpg">
+    </div>
+    <div class="card-content">
+      <span class="card-title grey-text text-darken-4">Welcome to FlatShare!</span>
+      <p>This is a web application for a shared flat, in which roommates want to record their bills and know how much each should pay for others.</p>
+      <br>
+      <div class="card-action">
+        <p class="to-right"><a class="activator" href="#">How to start?</a></p>
+      </div>
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">How to start?<i class="material-icons right">close</i></span>
+      <p>Here are steps to start using FlatShare. Click them to go.</p>
+      <div class="collection">
+        <a href="/signup" class="collection-item">Sign up a flat account.</a>
+        <a href="/login" class="collection-item">Log in with your account.</a>
+        <a href="/manage" class="collection-item">Add memebers via manage.</a>
+        <a href="/bills" class="collection-item">Add bills via bills.</a>
+        <a href="/analysis" class="collection-item">See how much should each pays via analysis.</a>
+      </div>     
+    </div>
+  </div>
+{% endblock %}
