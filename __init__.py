@@ -65,17 +65,21 @@ def bills():
                            [session.get('flat_id'), ])
 
         members = [dict(member_name=row[0], member_id=row[1]) for row in cur.fetchall()]
-        if members == []:
+        if not members:
             msg["error"] = "Please add a member in manage page first"
 
         # id to name mapping dictionary
         d = dict()
         for member in members:
-            d[member["member_id"]]=member["member_name"]
+            d[member["member_id"]] = member["member_name"]
 
         # fetch all the bills
-        cur = g.db.execute('select content, amount, created_time, bills.member_id from bills inner join members on bills.member_id=members.member_id where flat_id=? order by bills.bill_id desc',
-                           [session.get('flat_id'), ])
+        cur = g.db.execute(
+            "select content, amount, created_time, bills.member_id "
+            "from bills inner join members on bills.member_id=members.member_id "
+            "where flat_id=? order by bills.bill_id desc",
+            [session.get('flat_id'), ]
+        )
         bills = [dict(content=row[0], amount=row[1], created_time=row[2], member_name=d[row[3]]) for row in cur.fetchall()]
 
         # compute the total amount
@@ -98,7 +102,7 @@ def add_bill():
     member_id = request.form['member_id']
     if amount.isdigit():
         g.db.execute('insert into bills (content, amount, member_id) values (?, ?, ?)',
-               [content, amount, member_id])
+                     [content, amount, member_id])
         g.db.commit()
         flash('New bill was successfully added')
         return redirect(url_for('bills'))
@@ -114,11 +118,11 @@ def analysis():
         msg["error"] = "Please log in first"
         return render_template('analysis.html', msg=msg)
     else:
-        # fetch all the memners
+        # fetch all the members
         cur = g.db.execute('select member_name, member_id from members where flat_id=?',
                            [session.get('flat_id'), ])
         members = [dict(member_name=row[0], member_id=row[1]) for row in cur.fetchall()]
-        if members == []:
+        if not members:
             msg["error"] = "Please add a member in manage page first"
 
         # get member number
@@ -130,8 +134,12 @@ def analysis():
             d[member["member_id"]] = member["member_name"]
 
         # fetch all the bills
-        cur = g.db.execute('select content, amount, bills.member_id from bills inner join members on bills.member_id=members.member_id where flat_id=? order by bills.bill_id desc',
-                           [session.get('flat_id'), ])
+        cur = g.db.execute(
+            "select content, amount, bills.member_id "
+            "from bills inner join members on bills.member_id=members.member_id "
+            "where flat_id=? order by bills.bill_id desc",
+            [session.get('flat_id'), ]
+        )
         bills = [dict(content=row[0], amount=row[1], member_name=d[row[2]]) for row in cur.fetchall()]
 
         # initialise the result dictionary
@@ -146,7 +154,7 @@ def analysis():
             total += bill["amount"]
             results[bill["member_name"]] += bill["amount"]
 
-        # prevent divied by zero
+        # prevent divided by zero
         if member_number != 0:
             average = total / member_number
         else:
@@ -178,9 +186,9 @@ def manage():
         member_name = request.form['member_name']
         cur = g.db.execute('select member_name from members where member_name=? and flat_id=?',
                            [member_name, session.get('flat_id')])
-        if cur.fetchall() == []:
+        if not cur.fetchall():
             g.db.execute('insert into members (member_name, flat_id) values (?, ?)',
-                     [member_name, session.get('flat_id')])
+                         [member_name, session.get('flat_id')])
             g.db.commit()
             msg["members"].append({"member_name": member_name})
             flash('New member was successfully added')
@@ -197,7 +205,7 @@ def change_location():
     if request.method == 'POST':
         country = request.form['country']
         g.db.execute('update flats set country=? where flat_name=?',
-               [country, session['flat_name']])
+                     [country, session['flat_name']])
         g.db.commit()
         session["country"] = country
         session["currency"] = CURRENCY[session["country"]]
@@ -237,10 +245,10 @@ def signup():
         flat_name = request.form['flat_name']
         password = request.form['password']
         cur = g.db.execute('select flat_name from flats where flat_name=?',
-                           [flat_name,])
-        if cur.fetchall() == []:
+                           [flat_name, ])
+        if not cur.fetchall():
             g.db.execute('insert into flats (flat_name, password) values (?, ?)',
-                     [flat_name, password])
+                         [flat_name, password])
             g.db.commit()
             flash('Signup successfully, please log in')
             return render_template('login.html', msg=msg)
@@ -259,7 +267,7 @@ def login():
                            [flat_name, ])
         result = cur.fetchall()
 
-        if result == []:
+        if not result:
             msg["error"] = 'Unexsistent username'
         elif password != result[0][1]:
             msg["error"] = 'Unmatched password'
