@@ -100,14 +100,17 @@ def add_bill():
     content = request.form['content']
     amount = request.form['amount']
     member_id = request.form['member_id']
-    if amount.isdigit():
+    try:
+        amount = amount.replace(u'\xA5', '')    # remove Yuan symbol
+        amount = amount.replace(u'\xA3', '')    # remove pound symbol
+        amount = float(amount)                  # convert to float
         g.db.execute('insert into bills (content, amount, member_id) values (?, ?, ?)',
                      [content, amount, member_id])
         g.db.commit()
         flash('New bill was successfully added')
         return redirect(url_for('bills'))
-    else:
-        msg["error"] = "Please input a number in amount"
+    except:
+        msg["error"] = "Please input an valid number in amount"
         return render_template('bills.html', msg=msg)
 
 
