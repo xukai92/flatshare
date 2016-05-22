@@ -14,7 +14,7 @@ app = Flask(__name__)
 
 # Load default config and override config from an environment variable
 app.config.update(dict(
-    DATABASE=os.path.dirname(__file__)+'/tmp/flatshare.db',
+    DATABASE=os.path.join(app.root_path, 'flatshare.db'),
     DEBUG=True,
     SECRET_KEY='rubyonrailstutorial',
     USERNAME='admin',
@@ -317,4 +317,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
